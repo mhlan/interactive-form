@@ -87,7 +87,7 @@ basicInfo.title.addEventListener("change", e => {
   }
 });
 
-//displays corresponding color options based on selectedd theme
+//displays corresponding color options based on selected theme
 shirtInfo.design.addEventListener("change", e => {
   const select = e.target.value;
   if (select === "js puns") {
@@ -111,8 +111,48 @@ shirtInfo.design.addEventListener("change", e => {
   }
 });
 
+//calculates and updates total based on activites selected
+//prevents user from booking conflicting time slots
 activities.fieldset.addEventListener("change", e => {
   const select = e.target;
   calculateTotal(select);
   updateTotal();
+  if (select.name === "js-frameworks" && select.checked === true) {
+    activities.express.style.color = "rgba(255, 255, 255, 0.5)";
+    activities.express.style.fontStyle = "italic";
+    activities.express.firstElementChild.setAttribute("disabled", "true");
+  } else if (select.name === "js-frameworks" && select.checked === false) {
+    activities.express.style.color = "#000";
+    activities.express.style.fontStyle = "normal";
+    activities.express.firstElementChild.removeAttribute("disabled");
+  }
+  if (select.name === "express" && select.checked === true) {
+    activities.frameworks.style.color = "rgba(255, 255, 255, 0.5)";
+    activities.frameworks.style.fontStyle = "italic";
+    activities.frameworks.firstElementChild.setAttribute("disabled", "true");
+  } else if (select.name === "express" && select.checked === false) {
+    activities.frameworks.style.color = "#000";
+    activities.frameworks.style.fontStyle = "normal";
+    activities.frameworks.firstElementChild.removeAttribute("disabled");
+  }
+  if (select.name === "js-libs" && select.checked === true) {
+    activities.node.style.color = "rgba(255, 255, 255, 0.5)";
+    activities.node.style.fontStyle = "italic";
+    activities.node.firstElementChild.setAttribute("disabled", "true");
+  } else if (select.name === "js-libs" && select.checked === false) {
+    activities.node.style.color = "#000";
+    activities.node.style.fontStyle = "normal";
+    activities.node.firstElementChild.removeAttribute("disabled");
+  }
+  if (select.name === "node" && select.checked === true) {
+    activities.libraries.style.color = "rgba(255, 255, 255, 0.5)";
+    activities.libraries.style.fontStyle = "italic";
+    activities.libraries.firstElementChild.setAttribute("disabled", "true");
+  } else if (select.name === "node" && select.checked === false) {
+    activities.libraries.style.color = "#000";
+    activities.libraries.style.fontStyle = "normal";
+    activities.libraries.firstElementChild.removeAttribute("disabled");
+  }
+  console.log(select);
+  console.log(select.name);
 });
