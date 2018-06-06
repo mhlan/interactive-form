@@ -52,14 +52,10 @@ buildTotal();
 
 //---- Functions -----//
 function buildTotal() {
-  if (total === 0) {
-    const span = document.createElement("span");
-    span.id = "total-cost";
-    span.innerText = "Total Due: $" + total;
-    activities.fieldset.append(span);
-  } else if (total > 0) {
-    span.innerText = "Total Due: $" + total;
-  }
+  const span = document.createElement("span");
+  span.id = "total-cost";
+  span.innerText = "Total Due: $" + total;
+  activities.fieldset.append(span);
 }
 
 function calculateTotal(select) {
@@ -72,11 +68,11 @@ function calculateTotal(select) {
   } else if (select.type === "checkbox" && select.checked === false) {
     total -= 100;
   }
-  console.log(total);
 }
 
 function updateTotal() {
   const span = document.getElementById("total-cost");
+  span.innerText = "Total Due: " + "$" + total;
 }
 
 //---- Event Listeners ----//
@@ -118,4 +114,5 @@ shirtInfo.design.addEventListener("change", e => {
 activities.fieldset.addEventListener("change", e => {
   const select = e.target;
   calculateTotal(select);
+  updateTotal();
 });
