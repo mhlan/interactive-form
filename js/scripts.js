@@ -29,17 +29,21 @@ const activities = {
   npm: document.querySelector(".activities").children[7]
 };
 
-const payment = {
+const paymentInfo = {
   fieldset: document.querySelector(".activities").nextElementSibling,
   payment: document.getElementById("payment"),
+  ccDiv: document.getElementById("credit-card"),
   cc: document.getElementById("cc-num"),
   zip: document.getElementById("zip"),
   cvv: document.getElementById("ccv"),
   month: document.getElementById("exp-month"),
-  year: document.getElementById("exp-year")
+  year: document.getElementById("exp-year"),
+  paypal: document.getElementsByTagName("p")[0],
+  bitcoin: document.getElementsByTagName("p")[1]
 };
 
 //---- Misc Declarations ----//
+
 let total = 0;
 
 //---- On Page Load ----//
@@ -48,9 +52,15 @@ basicInfo.name.focus();
 basicInfo.other.style.display = "none";
 shirtInfo.design.firstElementChild.disabled = "true";
 shirtInfo.colorDiv.style.display = "none";
+paymentInfo.payment.firstElementChild.disabled = "true";
+paymentInfo.ccDiv.style.display = "none";
+paymentInfo.paypal.style.display = "none";
+paymentInfo.bitcoin.style.display = "none";
 buildTotal();
 
 //---- Functions -----//
+
+//builds html for the total cost element
 function buildTotal() {
   const span = document.createElement("span");
   span.id = "total-cost";
@@ -58,6 +68,7 @@ function buildTotal() {
   activities.fieldset.append(span);
 }
 
+//calculates total cost based on selected activites
 function calculateTotal(select) {
   if (select.name === "all" && select.checked === true) {
     total += 200;
@@ -70,6 +81,7 @@ function calculateTotal(select) {
   }
 }
 
+//updates total cost based on selected activites
 function updateTotal() {
   const span = document.getElementById("total-cost");
   span.innerText = "Total Due: " + "$" + total;
@@ -153,6 +165,26 @@ activities.fieldset.addEventListener("change", e => {
     activities.libraries.style.fontStyle = "normal";
     activities.libraries.firstElementChild.removeAttribute("disabled");
   }
-  console.log(select);
-  console.log(select.name);
+});
+
+//displays appropriate payment field(s) or relevant text based on selected
+//payment options
+
+paymentInfo.payment.addEventListener("change", e => {
+  const select = e.target.value;
+  if (select === "credit card") {
+    paymentInfo.ccDiv.style.display = "block";
+  } else {
+    paymentInfo.ccDiv.style.display = "none";
+  }
+  if (select === "paypal") {
+    paymentInfo.paypal.style.display = "block";
+  } else {
+    paymentInfo.paypal.style.display = "none";
+  }
+  if (select === "bitcoin") {
+    paymentInfo.bitcoin.style.display = "block";
+  } else {
+    paymentInfo.bitcoin.style.display = "none";
+  }
 });
