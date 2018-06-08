@@ -29,9 +29,9 @@ const activities = {
   npm: document.querySelector(".activities").children[7]
 };
 
-const paymentInfo = {
+const payment = {
   fieldset: document.querySelector(".activities").nextElementSibling,
-  payment: document.getElementById("payment"),
+  method: document.getElementById("payment"),
   ccDiv: document.getElementById("credit-card"),
   cc: document.getElementById("cc-num"),
   zip: document.getElementById("zip"),
@@ -41,6 +41,8 @@ const paymentInfo = {
   paypal: document.getElementsByTagName("p")[0],
   bitcoin: document.getElementsByTagName("p")[1]
 };
+
+const submit = document.querySelector("button");
 
 //---- Misc Declarations ----//
 
@@ -52,10 +54,10 @@ basicInfo.name.focus();
 basicInfo.other.style.display = "none";
 shirtInfo.design.firstElementChild.disabled = "true";
 shirtInfo.colorDiv.style.display = "none";
-paymentInfo.payment.firstElementChild.disabled = "true";
-paymentInfo.ccDiv.style.display = "none";
-paymentInfo.paypal.style.display = "none";
-paymentInfo.bitcoin.style.display = "none";
+payment.method.firstElementChild.disabled = "true";
+payment.ccDiv.style.display = "none";
+payment.paypal.style.display = "none";
+payment.bitcoin.style.display = "none";
 buildTotal();
 
 //---- Functions -----//
@@ -169,22 +171,69 @@ activities.fieldset.addEventListener("change", e => {
 
 //displays appropriate payment field(s) or relevant text based on selected
 //payment options
-
-paymentInfo.payment.addEventListener("change", e => {
+payment.method.addEventListener("change", e => {
   const select = e.target.value;
   if (select === "credit card") {
-    paymentInfo.ccDiv.style.display = "block";
+    payment.ccDiv.style.display = "block";
   } else {
-    paymentInfo.ccDiv.style.display = "none";
+    payment.ccDiv.style.display = "none";
   }
   if (select === "paypal") {
-    paymentInfo.paypal.style.display = "block";
+    payment.paypal.style.display = "block";
   } else {
-    paymentInfo.paypal.style.display = "none";
+    payment.paypal.style.display = "none";
   }
   if (select === "bitcoin") {
-    paymentInfo.bitcoin.style.display = "block";
+    payment.bitcoin.style.display = "block";
   } else {
-    paymentInfo.bitcoin.style.display = "none";
+    payment.bitcoin.style.display = "none";
+  }
+});
+
+//---- Form Validation ----//
+
+//---- DOM Selectors ----//
+//---- Misc Declarations ----//
+//---- On Page Load ----//
+//---- Functions -----//
+//---- Event Listeners ----//
+
+let email = basicInfo.mail.value;
+let isValid;
+const nameError = "name. Eg: Bob Dole";
+const emailError = "email address. Eg: yourname@domain.com";
+
+const span = document.createElement("span");
+
+//checks if the user entered a valid email address
+function validateEmail(email) {
+  var re = /\S+@\S+\.\S+/;
+  console.log(re.test(email));
+  return re.test(email);
+}
+//listens for typing in email field
+//checks if email syntax is valid
+//shows appropriate warning message if it isn't
+basicInfo.mail.addEventListener("keyup", e => {
+  email = basicInfo.mail.value;
+  isValid = validateEmail(email);
+  if (!isValid) {
+    span.innerText = "Please enter a valid " + emailError;
+    basicInfo.fieldset.insertBefore(span, basicInfo.mail.nextElementSibling);
+    span.className = "email-error";
+    basicInfo.mail.setAttribute("class", "error-true");
+  } else {
+    span.remove();
+    basicInfo.mail.removeAttribute("class", "error-true");
+  }
+});
+
+//submit button event listener
+submit.addEventListener("click", e => {
+  e.preventDefault();
+  if (!isValid) {
+    console.log("Please enter a valid email");
+  } else {
+    console.log("Bingo!");
   }
 });
