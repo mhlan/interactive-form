@@ -138,8 +138,20 @@ shirtInfo.design.addEventListener("change", e => {
   if (select === "js puns") {
     shirtInfo.colorDiv.style.display = "block";
     shirtInfo.colors[0].style.display = "";
+    shirtInfo.colors[0].innerText = shirtInfo.colors[0].innerText.replace(
+      "(JS Puns shirt only)",
+      ""
+    );
     shirtInfo.colors[1].style.display = "";
+    shirtInfo.colors[1].innerText = shirtInfo.colors[1].innerText.replace(
+      "(JS Puns shirt only)",
+      ""
+    );
     shirtInfo.colors[2].style.display = "";
+    shirtInfo.colors[2].innerText = shirtInfo.colors[2].innerText.replace(
+      "(JS Puns shirt only)",
+      ""
+    );
     shirtInfo.colors[3].style.display = "none";
     shirtInfo.colors[4].style.display = "none";
     shirtInfo.colors[5].style.display = "none";
@@ -150,8 +162,20 @@ shirtInfo.design.addEventListener("change", e => {
     shirtInfo.colors[1].style.display = "none";
     shirtInfo.colors[2].style.display = "none";
     shirtInfo.colors[3].style.display = "";
+    shirtInfo.colors[3].innerText = shirtInfo.colors[3].innerText.replace(
+      "(I ♥ JS shirt only)",
+      ""
+    );
     shirtInfo.colors[4].style.display = "";
+    shirtInfo.colors[4].innerText = shirtInfo.colors[4].innerText.replace(
+      "(I ♥ JS shirt only)",
+      ""
+    );
     shirtInfo.colors[5].style.display = "";
+    shirtInfo.colors[5].innerText = shirtInfo.colors[5].innerText.replace(
+      "(I ♥ JS shirt only)",
+      ""
+    );
     shirtInfo.colors[3].selected = "true";
   }
 });
