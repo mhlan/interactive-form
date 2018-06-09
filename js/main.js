@@ -1,73 +1,188 @@
-const firstFieldSet = document.querySelector("fieldset");
-const title = document.getElementById("title");
-const design = document.getElementById("design");
-const colorSelections = document
-  .getElementById("color")
-  .querySelectorAll("option");
-let otherTitleCount = 0;
-let y = document.getElementById("design").firstElementChild;
+//---------** Form Modules **---------//
 
-//makes the "name" field the focus on page load/refresh
-function focus() {
-  const name = document.getElementById("name").focus();
+//---- DOM Selectors ----//
+const basicInfo = {
+  fieldset: document.querySelector("fieldset"),
+  name: document.getElementById("name"),
+  mail: document.getElementById("mail"),
+  title: document.getElementById("title"),
+  other: document.getElementById("other-title")
+};
+
+const shirtInfo = {
+  fieldset: document.querySelector(".shirt"),
+  size: document.getElementById("size"),
+  design: document.getElementById("design"),
+  colorDiv: document.getElementById("colors-js-puns"),
+  color: document.getElementById("color"),
+  colors: document.getElementById("color").children
+};
+
+const activities = {
+  fieldset: document.querySelector(".activities"),
+  options: document.querySelector(".activities").children,
+  main: document.querySelector(".activities").children[1],
+  frameworks: document.querySelector(".activities").children[2],
+  libraries: document.querySelector(".activities").children[3],
+  express: document.querySelector(".activities").children[4],
+  node: document.querySelector(".activities").children[5],
+  tools: document.querySelector(".activities").children[6],
+  npm: document.querySelector(".activities").children[7]
+};
+
+const payment = {
+  fieldset: document.querySelector(".activities").nextElementSibling,
+  method: document.getElementById("payment"),
+  ccDiv: document.getElementById("credit-card"),
+  cc: document.getElementById("cc-num"),
+  zip: document.getElementById("zip"),
+  cvv: document.getElementById("ccv"),
+  month: document.getElementById("exp-month"),
+  year: document.getElementById("exp-year"),
+  paypal: document.getElementsByTagName("p")[0],
+  bitcoin: document.getElementsByTagName("p")[1]
+};
+
+const submit = document.querySelector("button");
+
+//---- Misc Declarations ----//
+let total = 0;
+
+//---- On Page Load ----//
+basicInfo.name.focus();
+basicInfo.other.style.display = "none";
+shirtInfo.design.firstElementChild.disabled = "true";
+shirtInfo.colorDiv.style.display = "none";
+payment.method.firstElementChild.disabled = "true";
+payment.ccDiv.style.display = "none";
+payment.paypal.style.display = "none";
+payment.bitcoin.style.display = "none";
+buildTotal();
+
+//---- Functions -----//
+
+//builds html for the total cost element
+function buildTotal() {
+  const span = document.createElement("span");
+  span.id = "total-cost";
+  span.innerText = "Total Due: $" + total;
+  activities.fieldset.append(span);
 }
 
-//hides color selections and replaces with a message to user as default
-function hideColors() {
-  for (let i = 0; i < colorSelections.length; i++) {
-    colorSelections[i].style.display = "none";
+//calculates total cost based on selected activites
+function calculateTotal(select) {
+  if (select.name === "all" && select.checked === true) {
+    total += 200;
+  } else if (select.name === "all" && select.checked === false) {
+    total -= 200;
+  } else if (select.type === "checkbox" && select.checked === true) {
+    total += 100;
+  } else if (select.type === "checkbox" && select.checked === false) {
+    total -= 100;
   }
-  if (y.selected === true) {
-    const colorSelection = document.getElementById("color");
-    const option = document.createElement("option");
-    option.setAttribute("id", "theme-select");
-    option.innerText = "Select Theme";
-    colorSelection.append(option);
-    option.selected = "true";
+}
+
+//updates total cost based on selected activites
+function updateTotal() {
+  const span = document.getElementById("total-cost");
+  span.innerText = "Total Due: " + "$" + total;
+}
+
+//hides activity options with conflicting time slots
+function disableOption(selectedName, select) {
+  const next = select.parentNode.nextElementSibling.nextElementSibling;
+  const prev = select.parentNode.previousElementSibling.previousElementSibling;
+  if (
+    (selectedName === "js-frameworks" && select.checked === true) ||
+    (selectedName === "js-libs" && select.checked === true)
+  ) {
+    next.className = "disabled";
+    next.firstElementChild.setAttribute("disabled", "true");
+  } else if (
+    (selectedName === "js-frameworks" && select.checked === false) ||
+    (selectedName === "js-libs" && select.checked === false)
+  ) {
+    next.removeAttribute("class", "disabler");
+    next.firstElementChild.removeAttribute("disabled");
+  }
+  if (
+    (selectedName === "express" && select.checked === true) ||
+    (selectedName === "node" && select.checked === true)
+  ) {
+    prev.className = "disabled";
+    prev.firstElementChild.setAttribute("disabled", "true");
+  } else if (
+    (selectedName === "express" && select.checked === false) ||
+    (selectedName === "node" && select.checked === false)
+  ) {
+    prev.removeAttribute("class", "disabler");
+    prev.firstElementChild.removeAttribute("disabled");
   }
 }
 
-//create text input field when user selects "Other" from the title role select field
-function createOtherTitle() {
-  const input = document.createElement("input");
-  input.type = "text";
-  input.setAttribute("id", "other-title");
-  input.setAttribute("placeholder", "Your Title Role");
-  firstFieldSet.appendChild(input);
-}
+//---- Event Listeners ----//
 
-//listens for changes to the job title selection field
-//dynamically adds or removes text input field for "other" selection
-title.addEventListener("change", e => {
-  const titleSelection = e.currentTarget.value;
-  if (titleSelection === "other" && otherTitleCount < 1) {
-    otherTitleCount++;
-    createOtherTitle();
-  } else if (titleSelection !== "other" && otherTitleCount > 0) {
-    const otherTitle = document.getElementById("other-title");
-    otherTitleCount--;
-    otherTitle.remove();
+//show or hide "other" input form
+basicInfo.title.addEventListener("change", e => {
+  const select = e.target.value;
+  if (select === "other") {
+    basicInfo.other.style.display = "";
+  } else {
+    basicInfo.other.style.display = "none";
   }
 });
 
-design.addEventListener("change", e => {
-  const designSelection = e.currentTarget.value;
-  if (designSelection === "Select Theme") {
-    hideColors();
-  } else if (designSelection === "js puns") {
-    hideColors();
-    for (let i = 0; i < 3; i++) {
-      let innerText = colorSelections[i];
-      innerText.style.display = "block";
-    }
-  } else if (designSelection === "heart js") {
-    hideColors();
-    for (let i = 3; i < 6; i++) {
-      let innerText = colorSelections[i];
-      innerText.style.display = "block";
-    }
+//displays corresponding color options based on selected theme
+shirtInfo.design.addEventListener("change", e => {
+  const select = e.target.value;
+  if (select === "js puns") {
+    shirtInfo.colorDiv.style.display = "block";
+    shirtInfo.colors[0].style.display = "";
+    shirtInfo.colors[1].style.display = "";
+    shirtInfo.colors[2].style.display = "";
+    shirtInfo.colors[3].style.display = "none";
+    shirtInfo.colors[4].style.display = "none";
+    shirtInfo.colors[5].style.display = "none";
+    shirtInfo.colors[0].selected = "true";
+  } else if (select === "heart js") {
+    shirtInfo.colorDiv.style.display = "block";
+    shirtInfo.colors[0].style.display = "none";
+    shirtInfo.colors[1].style.display = "none";
+    shirtInfo.colors[2].style.display = "none";
+    shirtInfo.colors[3].style.display = "";
+    shirtInfo.colors[4].style.display = "";
+    shirtInfo.colors[5].style.display = "";
+    shirtInfo.colors[3].selected = "true";
   }
 });
 
-focus();
-hideColors();
+//calculates and updates total based on activites selected
+//prevents user from booking conflicting time slots
+activities.fieldset.addEventListener("change", e => {
+  const select = e.target;
+  const selectedName = select.name;
+  calculateTotal(select);
+  updateTotal();
+  disableOption(selectedName, select);
+});
+
+//displays appropriate payment field(s) or relevant text based on selected
+//payment options
+payment.method.addEventListener("change", e => {
+  const select = e.target.value;
+  if (select === "credit card") {
+    payment.ccDiv.style.display = "block";
+  } else {
+    payment.ccDiv.style.display = "none";
+  }
+  if (select === "paypal") {
+    payment.paypal.style.display = "block";
+  } else {
+    payment.paypal.style.display = "none";
+  }
+  if (select === "bitcoin") {
+    payment.bitcoin.style.display = "block";
+  } else {
+    payment.bitcoin.style.display = "none";
+  }
+});

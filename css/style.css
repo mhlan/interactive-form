@@ -183,6 +183,10 @@ button:hover {
 /* ================================= 
   Overrides
 ==================================== */
+.disabled {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
 
 .error {
   display: block;
