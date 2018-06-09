@@ -1,5 +1,6 @@
-//---- DOM Selectors ----//
+//---------** Form Modules **---------//
 
+//---- DOM Selectors ----//
 const basicInfo = {
   fieldset: document.querySelector("fieldset"),
   name: document.getElementById("name"),
@@ -45,11 +46,9 @@ const payment = {
 const submit = document.querySelector("button");
 
 //---- Misc Declarations ----//
-
 let total = 0;
 
 //---- On Page Load ----//
-
 basicInfo.name.focus();
 basicInfo.other.style.display = "none";
 shirtInfo.design.firstElementChild.disabled = "true";
@@ -190,50 +189,89 @@ payment.method.addEventListener("change", e => {
   }
 });
 
-//---- Form Validation ----//
+//---------** Form Validation **---------//
 
 //---- DOM Selectors ----//
-//---- Misc Declarations ----//
-//---- On Page Load ----//
-//---- Functions -----//
-//---- Event Listeners ----//
+let name;
+let email;
 
-let email = basicInfo.mail.value;
-let isValid;
+//---- Misc Declarations ----//
+let nameIsValid;
+let emailIsValid;
 const nameError = "name. Eg: Bob Dole";
 const emailError = "email address. Eg: yourname@domain.com";
-
 const span = document.createElement("span");
+
+//---- On Page Load ----//
+
+//---- Functions -----//
+
+function validateName(name) {
+  if (name.length > 0 && name.replace(/\s+/g, " ").trim() !== "") {
+    nameIsValid = true;
+  } else {
+    nameIsValid = false;
+  }
+  return nameIsValid;
+}
 
 //checks if the user entered a valid email address
 function validateEmail(email) {
   var re = /\S+@\S+\.\S+/;
-  console.log(re.test(email));
   return re.test(email);
 }
+
+//---- Event Listeners ----//
+
+basicInfo.name.addEventListener("keyup", e => {
+  name = basicInfo.name.value;
+  nameIsValid = validateName(name);
+  if (!nameIsValid) {
+    span.innerText = "Please enter a valid " + nameError;
+    basicInfo.fieldset.insertBefore(span, basicInfo.name.nextElementSibling);
+    span.className = "error";
+    basicInfo.name.setAttribute("class", "error-true");
+  } else {
+    span.remove();
+    basicInfo.name.classList.remove("error-true");
+  }
+});
+
 //listens for typing in email field
 //checks if email syntax is valid
 //shows appropriate warning message if it isn't
 basicInfo.mail.addEventListener("keyup", e => {
   email = basicInfo.mail.value;
-  isValid = validateEmail(email);
-  if (!isValid) {
+  emailIsValid = validateEmail(email);
+  if (!emailIsValid) {
     span.innerText = "Please enter a valid " + emailError;
     basicInfo.fieldset.insertBefore(span, basicInfo.mail.nextElementSibling);
-    span.className = "email-error";
+    span.className = "error";
     basicInfo.mail.setAttribute("class", "error-true");
   } else {
     span.remove();
-    basicInfo.mail.removeAttribute("class", "error-true");
+    basicInfo.mail.classList.remove("error-true");
   }
+});
+
+activities.fieldset.addEventListener("change", e => {
+  console.log(e.target);
 });
 
 //submit button event listener
 submit.addEventListener("click", e => {
   e.preventDefault();
-  if (!isValid) {
+  if (!emailIsValid) {
     console.log("Please enter a valid email");
   } else {
     console.log("Bingo!");
+  }
+  if (total === 0) {
+    const span = document.createElement("span");
+    span.innerText = "Please register for at least one activity.";
+    span.className = "error";
+    activities.fieldset.insertBefore(span, activities.main);
+  } else {
+    span.remove();
   }
 });

@@ -184,13 +184,17 @@ button:hover {
   Overrides
 ==================================== */
 
-.email-error {
+.error {
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   font-style: oblique;
   color: #cc0000;
 }
 
 .error-true {
-  margin-bottom: 3px;
+  margin-bottom: 5px;
+}
+
+.error-false {
+  margin-bottom: 18px;
 }
