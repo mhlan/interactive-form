@@ -36,7 +36,7 @@ const payment = {
   ccDiv: document.getElementById("credit-card"),
   cc: document.getElementById("cc-num"),
   zip: document.getElementById("zip"),
-  cvv: document.getElementById("ccv"),
+  cvv: document.getElementById("cvv"),
   month: document.getElementById("exp-month"),
   year: document.getElementById("exp-year"),
   paypal: document.getElementsByTagName("p")[0],
@@ -209,4 +209,86 @@ payment.method.addEventListener("change", e => {
   } else {
     payment.bitcoin.style.display = "none";
   }
+});
+
+//---------** Form Validation **---------//
+
+let name, email, cc, zip, cvv;
+
+let nameIsValid,
+  emailIsValid,
+  activityIsSelected,
+  ccIsValid,
+  zipIsValid,
+  cvvIsValid;
+
+function validateName(name) {
+  if (isNaN(name)) {
+    if (name.length > 0 && name.replace(/\s+/g, " ").trim() !== "") {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+function validateEmail(email) {
+  var re = /\S+@\S+\.\S+/;
+  return re.test(email);
+}
+
+function validateActivites() {
+  if (total > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function validateCC(cc) {
+  if (isNaN(cc)) {
+    return false;
+  } else if (cc.length >= 13 && cc.length <= 16) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function validateZip(zip) {
+  if (isNaN(zip)) {
+    return false;
+  } else if (zip.length === 5) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function validateCVV(cvv) {
+  if (isNaN(cvv)) {
+    return false;
+  } else if (cvv.length === 3) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+submit.addEventListener("click", e => {
+  e.preventDefault();
+  name = basicInfo.name.value;
+  email = basicInfo.mail.value;
+  cc = payment.cc.value;
+  zip = payment.zip.value;
+  cvv = payment.cvv.value;
+  nameIsValid = validateName(name);
+  emailIsValid = validateEmail(email);
+  activityIsSelected = validateActivites();
+  console.log(activityIsSelected);
+  ccIsValid = validateCC(cc);
+  zipIsValid = validateZip(zip);
+  cvvIsValid = validateCVV(cvv);
 });
