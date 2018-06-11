@@ -188,7 +188,26 @@ button:hover {
   font-style: italic;
 }
 
-.error {
+.error-true,
+.error-true:focus {
+  border-color: red;
+}
+
+.error-true-text {
+  color: red;
+  font-style: italic;
+}
+
+.error-false-text {
+  color: #184f68;
+  font-style: normal;
+}
+
+.error-false {
+  border-color: #c1deeb;
+}
+
+/* .error {
   display: block;
   margin-bottom: 10px;
   font-style: oblique;
@@ -201,4 +220,4 @@ button:hover {
 
 .error-false {
   margin-bottom: 18px;
-}
+} */

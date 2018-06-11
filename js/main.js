@@ -213,82 +213,179 @@ payment.method.addEventListener("change", e => {
 
 //---------** Form Validation **---------//
 
+//---- Misc Declarations ----//
+
 let name, email, cc, zip, cvv;
 
 let nameIsValid,
   emailIsValid,
-  activityIsSelected,
+  shirtIsValid,
+  activityIsValid,
+  paymentTypeIsValid,
   ccIsValid,
   zipIsValid,
-  cvvIsValid;
+  cvvIsValid,
+  formIsValid;
 
+//---- Functions -----//
+
+//checks to see if name is valid
+//returns false if numbers or only white space is inputed
 function validateName(name) {
   if (isNaN(name)) {
     if (name.length > 0 && name.replace(/\s+/g, " ").trim() !== "") {
+      basicInfo.name.className = "error-false";
+      return true;
+    } else {
+      basicInfo.name.className = "error-true";
+      return false;
+    }
+  } else {
+    basicInfo.name.className = "error-true";
+    return false;
+  }
+}
+
+//checks if inputed email is of a valid format
+function validateEmail(email) {
+  var re = /\S+@\S+\.\S+/;
+  if (re.test(email)) {
+    basicInfo.mail.className = "error-false";
+    return true;
+  } else {
+    basicInfo.mail.className = "error-true";
+    return false;
+  }
+}
+
+//checks if a design theme is selected
+function validateShirt() {
+  if (shirtInfo.design.value === "Select Theme") {
+    shirtInfo.design.className = "error-true";
+    return false;
+  } else {
+    shirtInfo.design.className = "error-false";
+    return true;
+  }
+}
+
+//checks if an activity has been selected
+function validateActivites() {
+  if (total > 0) {
+    activities.fieldset.firstElementChild.className = "error-false-text";
+    return true;
+  } else {
+    activities.fieldset.firstElementChild.className = "error-true-text";
+    return false;
+  }
+}
+
+//checks if a payment type has been selected
+function validatePaymentType() {
+  if (payment.method.value === "select_method") {
+    payment.method.className = "error-true";
+    return false;
+  } else {
+    payment.method.className = "error-false";
+    return true;
+  }
+}
+
+//checks if a numeric value between 13 and 16 has been entered
+function validateCC(cc) {
+  if (isNaN(cc)) {
+    payment.cc.className = "error-true";
+    return false;
+  } else if (cc.length >= 13 && cc.length <= 16) {
+    payment.cc.className = "error-false";
+    return true;
+  } else {
+    payment.cc.className = "error-true";
+    return false;
+  }
+}
+
+//checks that a numeric value with a length of 5 has been entered
+function validateZip(zip) {
+  if (isNaN(zip)) {
+    payment.zip.className = "error-true";
+    return false;
+  } else if (zip.length === 5) {
+    payment.zip.className = "error-false";
+    return true;
+  } else {
+    payment.zip.className = "error-true";
+    return false;
+  }
+}
+
+//checks that a numeric value with a length of 6 has been entered
+function validateCVV(cvv) {
+  if (isNaN(cvv)) {
+    payment.cvv.className = "error-true";
+    return false;
+  } else if (cvv.length === 3) {
+    payment.cvv.className = "error-false";
+    return true;
+  } else {
+    payment.cvv.className = "error-true";
+    return false;
+  }
+}
+
+//final check that ensures all required entries return true
+function validateForm() {
+  nameIsValid = validateName(name);
+  emailIsValid = validateEmail(email);
+  shirtIsValid = validateShirt();
+  activityIsValid = validateActivites();
+  paymentTypeIsValid = validatePaymentType();
+  ccIsValid = validateCC(cc);
+  zipIsValid = validateZip(zip);
+  cvvIsValid = validateCVV(cvv);
+  if (payment.method.value === "credit card") {
+    if (
+      nameIsValid &&
+      emailIsValid &&
+      shirtIsValid &&
+      activityIsValid &&
+      ccIsValid &&
+      zipIsValid &&
+      cvvIsValid
+    ) {
       return true;
     } else {
       return false;
     }
   } else {
-    return false;
+    if (
+      nameIsValid &&
+      emailIsValid &&
+      shirtIsValid &&
+      activityIsValid &&
+      paymentTypeIsValid
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
-function validateEmail(email) {
-  var re = /\S+@\S+\.\S+/;
-  return re.test(email);
-}
-
-function validateActivites() {
-  if (total > 0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function validateCC(cc) {
-  if (isNaN(cc)) {
-    return false;
-  } else if (cc.length >= 13 && cc.length <= 16) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function validateZip(zip) {
-  if (isNaN(zip)) {
-    return false;
-  } else if (zip.length === 5) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function validateCVV(cvv) {
-  if (isNaN(cvv)) {
-    return false;
-  } else if (cvv.length === 3) {
-    return true;
-  } else {
-    return false;
-  }
-}
+//---- Event Listeners ----//
 
 submit.addEventListener("click", e => {
-  e.preventDefault();
   name = basicInfo.name.value;
   email = basicInfo.mail.value;
   cc = payment.cc.value;
   zip = payment.zip.value;
   cvv = payment.cvv.value;
-  nameIsValid = validateName(name);
-  emailIsValid = validateEmail(email);
-  activityIsSelected = validateActivites();
-  console.log(activityIsSelected);
-  ccIsValid = validateCC(cc);
-  zipIsValid = validateZip(zip);
-  cvvIsValid = validateCVV(cvv);
+  formIsValid = validateForm();
+  if (!formIsValid) {
+    e.preventDefault();
+    console.log("Form is not valid.");
+  } else {
+    e.preventDefault();
+    console.log("Form is valid.");
+  }
 });
