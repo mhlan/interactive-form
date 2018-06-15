@@ -258,6 +258,7 @@ function validateEmail(email) {
   }
 }
 
+//executes during typing, checks for valid email format
 function validateEmailLive(email) {
   var re = /\S+@\S+\.\S+/;
   if (re.test(email)) {
@@ -269,6 +270,7 @@ function validateEmailLive(email) {
   }
 }
 
+//builds and appends the email error message
 function buildEmailError() {
   const span = document.createElement("span");
   span.innerText = "Example: email@website.com";
@@ -391,21 +393,21 @@ function validateForm() {
 }
 
 //---- Event Listeners ----//
+
+//listens for typing in email field, adds/removes error message in real time
 let errorCount = 0;
 basicInfo.mail.addEventListener("keyup", e => {
-  console.log(errorCount);
   let email = basicInfo.mail.value;
   const span = document.getElementById("error-message");
   const emailIsValid = validateEmailLive(email);
   if (!emailIsValid && errorCount === 1) {
-    console.log("Invalid");
     buildEmailError();
   } else if (emailIsValid && errorCount >= 0) {
-    console.log("Valid");
     span.remove();
   }
 });
 
+//checks if all fields are valid on submission
 submit.addEventListener("click", e => {
   name = basicInfo.name.value;
   email = basicInfo.mail.value;
