@@ -248,7 +248,7 @@ function validateName(name) {
 
 //checks if inputed email is of a valid format
 function validateEmail(email) {
-  var re = /\S+@\S+\.\S+/;
+  const re = /\S+@\S+\.\S+/;
   if (re.test(email)) {
     basicInfo.mail.className = "error-false";
     return true;
@@ -256,6 +256,24 @@ function validateEmail(email) {
     basicInfo.mail.className = "error-true";
     return false;
   }
+}
+
+function validateEmailLive(email) {
+  var re = /\S+@\S+\.\S+/;
+  if (re.test(email)) {
+    errorCount = 0;
+    return true;
+  } else {
+    errorCount++;
+    return false;
+  }
+}
+
+function buildEmailError() {
+  const span = document.createElement("span");
+  span.innerText = "Example: email@website.com";
+  span.id = "error-message";
+  basicInfo.fieldset.childNodes[7].appendChild(span);
 }
 
 //checks if a design theme is selected
@@ -373,6 +391,20 @@ function validateForm() {
 }
 
 //---- Event Listeners ----//
+let errorCount = 0;
+basicInfo.mail.addEventListener("keyup", e => {
+  console.log(errorCount);
+  let email = basicInfo.mail.value;
+  const span = document.getElementById("error-message");
+  const emailIsValid = validateEmailLive(email);
+  if (!emailIsValid && errorCount === 1) {
+    console.log("Invalid");
+    buildEmailError();
+  } else if (emailIsValid && errorCount >= 0) {
+    console.log("Valid");
+    span.remove();
+  }
+});
 
 submit.addEventListener("click", e => {
   name = basicInfo.name.value;
@@ -383,9 +415,11 @@ submit.addEventListener("click", e => {
   formIsValid = validateForm();
   if (!formIsValid) {
     e.preventDefault();
-    console.log("Form is not valid.");
+    alert("Please fix areas highlighted in red.");
+    scroll(0, 0);
   } else {
     e.preventDefault();
-    console.log("Form is valid.");
+    alert("Form submitted, see you at the event!");
+    location.reload();
   }
 });

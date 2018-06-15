@@ -207,17 +207,8 @@ button:hover {
   border-color: #c1deeb;
 }
 
-/* .error {
-  display: block;
-  margin-bottom: 10px;
-  font-style: oblique;
-  color: #cc0000;
+#error-message {
+  padding-left: 0.5rem;
+  color: red;
+  font-style: italic;
 }
-
-.error-true {
-  margin-bottom: 5px;
-}
-
-.error-false {
-  margin-bottom: 18px;
-} */
