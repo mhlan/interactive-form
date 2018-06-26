@@ -54,7 +54,8 @@ basicInfo.other.style.display = "none";
 shirtInfo.design.firstElementChild.disabled = "true";
 shirtInfo.colorDiv.style.display = "none";
 payment.method.firstElementChild.disabled = "true";
-payment.ccDiv.style.display = "none";
+payment.method.childNodes[3].selected = "true";
+payment.ccDiv.style.display = "block";
 payment.paypal.style.display = "none";
 payment.bitcoin.style.display = "none";
 buildTotal();
@@ -271,9 +272,9 @@ function validateEmailLive(email) {
 }
 
 //builds and appends the email error message
-function buildEmailError() {
+function buildEmailError(errorType) {
   const span = document.createElement("span");
-  span.innerText = "Example: email@website.com";
+  span.innerText = errorType;
   span.id = "error-message";
   basicInfo.fieldset.childNodes[7].appendChild(span);
 }
@@ -398,12 +399,16 @@ function validateForm() {
 let errorCount = 0;
 basicInfo.mail.addEventListener("keyup", e => {
   let email = basicInfo.mail.value;
+  const emptyError = "This field must not be left blank";
+  const formatError = "Example: email@website.com";
   const span = document.getElementById("error-message");
   const emailIsValid = validateEmailLive(email);
   if (!emailIsValid && errorCount === 1) {
-    buildEmailError();
+    buildEmailError(formatError);
+    validateEmail(email);
   } else if (emailIsValid && errorCount >= 0) {
     span.remove();
+    validateEmail(email);
   }
 });
 
